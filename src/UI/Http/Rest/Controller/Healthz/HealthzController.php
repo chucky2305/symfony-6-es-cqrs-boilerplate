@@ -31,12 +31,12 @@ final class HealthzController
     #[Route(path: '/healthz', name: 'healthz', methods: ['GET'])]
     public function __invoke(Request $request): OpenApi
     {
-        $elastic = null;
-        $mysql = null;
+        $elastic = $this->elasticSearchEventRepository->isHealthly();
+        $mysql = $this->mysqlReadModelUserRepository->isHealthy();
 
         if (
-            true === $elastic = $this->elasticSearchEventRepository->isHealthly() &&
-            true === $mysql = $this->mysqlReadModelUserRepository->isHealthy()
+            true === $elastic &&
+            true === $mysql
         ) {
             return OpenApi::empty(200);
         }
